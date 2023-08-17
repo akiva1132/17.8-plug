@@ -1,10 +1,18 @@
 const express = require("express");
+// const fetch = require('node-fetch');
 const app = express();
 
-app.get("/users", async (req, res) => {
-res.json({"hello": "world"});
+app.get("/", async (req, res) => {
+  try {
+    const response = await fetch('https://www.ynet.co.il/news/article/bjjprkuh2#autoplay');
+    const htmlContent = await response.text();
+    res.send(htmlContent);
+  } catch (error) {
+    console.error('An error occurred', error);
+    res.status(500).send('An error occurred');
+  }
 });
-console.log("hello");
+
 app.listen(8080, () => {
-  console.log("run...");
+  console.log("Server is running...");
 });
