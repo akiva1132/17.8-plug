@@ -5,6 +5,7 @@
   "main": "3.js",
   "start": "node 3.js",
   "scripts": {
+    "start": "node 3.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
