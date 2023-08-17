@@ -1,11 +1,11 @@
 const express = require("express");
 const axios = require("axios");
 const app = express();
-const dotenv = require("dotenv");
+// const dotenv = require("dotenv");
 const cheerio = require("cheerio");
-const { Configuration, OpenAIApi } = require("openai");
-const readlineSync = require("readline-sync");
-dotenv.config();
+// const { Configuration, OpenAIApi } = require("openai");
+// const readlineSync = require("readline-sync");
+// dotenv.config();
 
 app.use(express.text());
 
