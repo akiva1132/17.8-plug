@@ -4,7 +4,7 @@ const app = express();
 
 app.get("/", async (req, res) => {
   try {
-    const response = await axios.get('https://www.ynet.co.il/news/article/bjjprkuh2#autoplay');
+    const response = await axios.get('https://www.mako.co.il/news-money/real_estate/Article-c58018bb8930a81026.htm?sCh=31750a2610f26110&pId=173113802');
     const htmlContent = response.data;
     res.send(htmlContent);
   } catch (error) {
