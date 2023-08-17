@@ -7,4 +7,8 @@
 //   .catch(error => {
 //     console.error('An error occurred', error);
 //   });
+
+app.get("/users", async (req, res) => {
+    res.json("hello":"world");
+});
 console.log("hello");
