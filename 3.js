@@ -1,59 +1,57 @@
 const express = require("express");
 const axios = require("axios");
 const app = express();
-// const dotenv = require("dotenv");
 const cheerio = require("cheerio");
-// const { Configuration, OpenAIApi } = require("openai");
-// const readlineSync = require("readline-sync");
-// dotenv.config();
+const { OpenAI } = require("openai");
 
+const openai = new OpenAI({
+  apiKey: "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",
+});
 app.use(express.text());
 
-// const configuration = new Configuration({
-//   apiKey: process.env.OPENAI_API_KEY,
-// });
-// const openai = new OpenAIApi(configuration);
+async function replayGpt(promt, text) {
+  const completion = await openai.chat.completions.create({
+    messages: [{ role: "user", content: promt + text }],
+    model: "gpt-3.5-turbo",
+  });
 
-//   const chapGPT = async (prompt) => {
-//   const response = await openai.createChatCompletion({
-//   model: "gpt-3.5-turbo",
-//   messages: [{ role: "user", content: prompt }],
-//   });
-//   console.log(response["data"]["choices"][0]["message"]["content"]);
-//   };
-  
-//   chapGPT("hi?")
-
-
-
-
-
-
-
-
-
-
+  return completion.choices[0].message.content;
+}
 
 app.post("/", async (req, res) => {
   try {
-    const link = req.body
-    console.log(link)
-    const response = await axios.get(link);
-    const htmlContent = response.data;
-    const $ = cheerio.load(htmlContent);
     let text = "";
-    const h1_tags = $("h1");
-    if (h1_tags.length > 0) {
-      text += h1_tags.first().text() + "\n";
-    }
+    const link = req.body;
+    console.log(link);
 
-    $("p").each((index, element) => {
-      text += $(element).text() + "\n";
-    });
-    res.send(text);
+    if (
+      link.includes("mako.co.il") ||
+      link.includes("israelhayom.co.il") ||
+      link.includes("walla.co.il") ||
+      link.includes("sport5.co.il")
+    ) {
+      const response = await axios.get(link);
+      const htmlContent = response.data;
+      const $ = cheerio.load(htmlContent);
+      const h1_tags = $("h1");
+      if (h1_tags.length > 0) {
+        text += h1_tags.first().text() + "\n";
+      }
+
+      $("p").each((index, element) => {
+        text += $(element).text() + "\n";
+      });
+    } else {
+      console.log("else");
+      res.send("האתר אינו נתמך");
+      return;
+    }
+    let reply = await replayGpt("סכם לי במספר שורות את הטסקט הבא: ", text);
+    console.log(reply);
+    res.send(reply);
   } catch (error) {
-    console.error('An error occurred', error);
-    res.status(500).send('An error occurred');
+    console.error("An error occurred", error);
+    res.status(500).send("An error occurred");
   }
 });
 
